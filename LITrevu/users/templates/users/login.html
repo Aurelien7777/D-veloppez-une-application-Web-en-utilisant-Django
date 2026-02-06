@@ -1,0 +1,19 @@
+<h1>Connexion</h1>
+
+{% if error %}
+  <p style="color:red;">{{ error }}</p>
+{% endif %}
+
+<form method="post">
+  {% csrf_token %}
+
+  <label>Nom d'utilisateur</label>
+  <input type="text" name="username" required>
+
+  <label>Mot de passe</label>
+  <input type="password" name="password" required>
+
+  <button type="submit">Se connecter</button>
+</form>
+
+<p><a href="{% url 'signup' %}">Créer un compte</a></p>
