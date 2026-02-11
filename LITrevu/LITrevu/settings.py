@@ -40,8 +40,14 @@ INSTALLED_APPS = [
     'users',
     'reviews',
 ]
-
+# AUTH_USER_MODEL = Le modèle utilisateur officiel du projet se trouve dans l’app users, et s’appelle User.
+# users = l’app que tu as créée
+# User =  la classe User dans users/models.py
+# AUTH_USER_MODEL est une variable de configuration officielle de Django.
 AUTH_USER_MODEL = "users.User"
+
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
