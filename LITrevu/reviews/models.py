@@ -34,7 +34,7 @@ class Ticket(models.Model):
     # Ici : chaque ticket appartient à UN utilisateur
     # settings.AUTH_USER_MODEL = ton User personnalisé
     user = models.ForeignKey(
-        to=settings.AUTH_USER_MODEL,
+        settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE
     )
 

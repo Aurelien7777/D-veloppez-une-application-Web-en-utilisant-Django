@@ -1,4 +1,4 @@
-<h1>Connexion</h1>
+<h1>Connectez-vous</h1>
 
 {% if error %}
   <p style="color:red;">{{ error }}</p>
@@ -16,4 +16,9 @@
   <button type="submit">Se connecter</button>
 </form>
 
-<p><a href="{% url 'signup' %}">Créer un compte</a></p>
+<!-- Nous passons un argument à la balise url : 'signup'
+C'est comme passer des arguments à une fonction Python, 
+mais dans les balises de gabarits, 
+et nous n'avons pas besoin de saisir les parenthèses.-->
+<p>Inscrivez-vous maintenant</p>
+<p><a href="{% url 'signup' %}">S'inscrire</a></p>

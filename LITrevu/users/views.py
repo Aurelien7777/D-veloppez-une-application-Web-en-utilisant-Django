@@ -8,6 +8,13 @@ from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
 
 
+def exemple(request):
+    return render(request, "users/test.html")
+
+def exemple2(request):
+    return render(request, "users/test2.html")
+
+
 def signup(request):
     """
     Page d'inscription :
@@ -15,12 +22,14 @@ def signup(request):
     - Si on arrive en POST : on valide et on crée l'utilisateur
     """
     if request.method == "POST":
+        # Création d'une instance UserCreationForm 
         # On remplit le formulaire avec ce que l'utilisateur a tapé
+        # Créer une instance de notre formulaire et le remplir avec les données POST
         form = UserCreationForm(request.POST)
 
         # Si tout est valide (mots de passe identiques, règles respectées, etc.)
         if form.is_valid():
-            # On crée l'utilisateur en base
+            # On crée l'utilisateur en base (Enregistrement dans la db.sqlite)
             user = form.save()
 
             # On connecte automatiquement l'utilisateur juste après l'inscription
