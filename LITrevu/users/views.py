@@ -53,12 +53,13 @@ def signup(request):
 
 
 def login_view(request):
+    if request.user.is_authenticated:
+        return redirect("feed")
 
     if request.method == "POST":
         form = LoginForm(request.POST)
 
         if form.is_valid():
-
             username = form.cleaned_data["username"]
             password = form.cleaned_data["password"]
 
@@ -68,16 +69,12 @@ def login_view(request):
                 login(request, user)
                 return redirect("feed")
 
-            return render(request, "users/login.html", {
-                "form": form,
-                "error": "Identifiants invalides"
-            })
+            return render(request, "users/login.html", {"form": form, "error": "Identifiants invalides."})
 
     else:
         form = LoginForm()
 
     return render(request, "users/login.html", {"form": form})
-
 
 def logout_view(request):
     """

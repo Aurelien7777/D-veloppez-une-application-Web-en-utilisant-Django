@@ -59,24 +59,18 @@ class CustomUserCreationForm(UserCreationForm):
 
 
 class LoginForm(forms.Form):
-    """
-    Formulaire de connexion.
-    On utilise forms.Form (et non ModelForm),
-    car on ne crée pas d'utilisateur ici.
-    """
-
     username = forms.CharField(
         label="Nom d'utilisateur",
         widget=forms.TextInput(attrs={
             "class": "form-control",
-            "placeholder": "Nom d'utilisateur"
-        })
+            "placeholder": "Nom d'utilisateur",
+        }),
     )
 
     password = forms.CharField(
         label="Mot de passe",
         widget=forms.PasswordInput(attrs={
             "class": "form-control",
-            "placeholder": "Mot de passe"
-        })
+            "placeholder": "Mot de passe",
+        }),
     )
