@@ -3,16 +3,20 @@ from django.contrib.auth import login, logout, authenticate
 
 # On utilise le formulaire de création d'utilisateur par défaut (basé sur ton User custom)
 from django.contrib.auth.forms import UserCreationForm
+from .forms import CustomUserCreationForm
 
 # Outils Django classiques : render = afficher un template, redirect = rediriger vers une page
 from django.shortcuts import render, redirect
 
+from django.contrib.auth.decorators import login_required
+from .forms import LoginForm
 
-def exemple(request):
-    return render(request, "users/test.html")
 
-def exemple2(request):
-    return render(request, "users/test2.html")
+@login_required
+def feed(request):
+    print(request.user.is_superuser)
+    return render(request, "users/feed.html", )
+
 
 
 def signup(request):
@@ -21,11 +25,15 @@ def signup(request):
     - Si on arrive en GET : on affiche le formulaire vide
     - Si on arrive en POST : on valide et on crée l'utilisateur
     """
+    
+    if request.user.is_authenticated:
+        return redirect("feed")
+
     if request.method == "POST":
         # Création d'une instance UserCreationForm 
         # On remplit le formulaire avec ce que l'utilisateur a tapé
         # Créer une instance de notre formulaire et le remplir avec les données POST
-        form = UserCreationForm(request.POST)
+        form = CustomUserCreationForm(request.POST)
 
         # Si tout est valide (mots de passe identiques, règles respectées, etc.)
         if form.is_valid():
@@ -39,33 +47,36 @@ def signup(request):
             return redirect("login")
     else:
         # Si c'est un GET, on affiche un formulaire vide
-        form = UserCreationForm()
+        form = CustomUserCreationForm()
 
     return render(request, "users/signup.html", {"form": form})
 
 
 def login_view(request):
-    """
-    Page de connexion :
-    - On demande username + password
-    - Si c'est bon : on connecte l'utilisateur
-    """
+
     if request.method == "POST":
-        username = request.POST.get("username")
-        password = request.POST.get("password")
+        form = LoginForm(request.POST)
 
-        # Django vérifie si le username/password correspondent à un utilisateur
-        user = authenticate(request, username=username, password=password)
+        if form.is_valid():
 
-        if user is not None:
-            # On connecte l'utilisateur (création de session)
-            login(request, user)
-            return redirect("login")  # temporaire, on redirigera vers "feed" plus tard
+            username = form.cleaned_data["username"]
+            password = form.cleaned_data["password"]
 
-        # Si mauvais identifiants, on renvoie un message
-        return render(request, "users/login.html", {"error": "Identifiants invalides."})
+            user = authenticate(request, username=username, password=password)
 
-    return render(request, "users/login.html")
+            if user is not None:
+                login(request, user)
+                return redirect("feed")
+
+            return render(request, "users/login.html", {
+                "form": form,
+                "error": "Identifiants invalides"
+            })
+
+    else:
+        form = LoginForm()
+
+    return render(request, "users/login.html", {"form": form})
 
 
 def logout_view(request):

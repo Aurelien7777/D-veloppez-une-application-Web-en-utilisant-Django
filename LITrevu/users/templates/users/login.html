@@ -1,24 +1,42 @@
-<h1>Connectez-vous</h1>
+{% extends "base.html" %}
 
-{% if error %}
-  <p style="color:red;">{{ error }}</p>
-{% endif %}
+{% block content %}
 
-<form method="post">
-  {% csrf_token %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-6 col-lg-4">
 
-  <label>Nom d'utilisateur</label>
-  <input type="text" name="username" required>
+      <h1 class="h3 text-center mb-4">Connexion</h1>
 
-  <label>Mot de passe</label>
-  <input type="password" name="password" required>
+      <form method="post" class="card p-4 shadow-sm">
+        {% csrf_token %}
 
-  <button type="submit">Se connecter</button>
-</form>
+        {{ form.non_field_errors }}
 
-<!-- Nous passons un argument à la balise url : 'signup'
-C'est comme passer des arguments à une fonction Python, 
-mais dans les balises de gabarits, 
-et nous n'avons pas besoin de saisir les parenthèses.-->
-<p>Inscrivez-vous maintenant</p>
-<p><a href="{% url 'signup' %}">S'inscrire</a></p>
+        <div class="mb-3">
+          {{ form.username.label_tag }}
+          {{ form.username }}
+        </div>
+
+        <div class="mb-3">
+          {{ form.password.label_tag }}
+          {{ form.password }}
+        </div>
+
+        {% if error %}
+          <div class="text-danger mb-2">
+            {{ error }}
+          </div>
+        {% endif %}
+
+        <button type="submit" class="btn btn-primary w-100">
+          Se connecter
+        </button>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}
