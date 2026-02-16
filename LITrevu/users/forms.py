@@ -1,4 +1,5 @@
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import get_user_model
 from django import forms
 from .models import User
 
@@ -19,7 +20,7 @@ class CustomUserCreationForm(UserCreationForm):
         - quel modèle on utilise
         - quels champs seront affichés
         """
-        model = User 
+        model = get_user_model() 
         fields = ("username",) 
         # Correspond au champs que l'on veut utiliser de "UserCreationForm"
         # On affiche uniquement username

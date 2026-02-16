@@ -44,7 +44,7 @@ def signup(request):
             login(request, user)
 
             # On redirige vers la page principale (on la créera ensuite)
-            return redirect("login")
+            return redirect("feed")
     else:
         # Si c'est un GET, on affiche un formulaire vide
         form = CustomUserCreationForm()
