@@ -4,6 +4,12 @@
 
     <h1>BIENVENUE SUR VOTRE ESPACE</h1>
 
+    <h2>Tickets</h2>
+    {% for photo in photos%}
+        <img src="{{ photo.image.url}}" alt="">
+        <p></p>
+    {% endfor %}
+
     <form action="" method="post">
         {% csrf_token %}
         {{form.as_p}}
