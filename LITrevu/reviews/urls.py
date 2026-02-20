@@ -11,7 +11,8 @@ urlpatterns = [
     path("ticket/", views.create_ticket_view, name="ticket_view"),
     path("review/", views.create_review_view, name="review_view"),
     path("review_ticket/", views.create_ticket_and_review_view, name="review_ticket_view"),
-
+    path("follows/", views.follows_view, name="follows"),
+    path("unfollow/<int:pk>/", views.unfollow_user_view, name="unfollow")
     # "name =" permet de créer une variable réutilisable pour le path 
     # Exemple dans un gabarit HTML on va l'utiliser comme ceci:
     # <p><a href="{% url 'signup' %}">Créer un compte</a></p>

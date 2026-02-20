@@ -1,5 +1,5 @@
 from django import forms
-from reviews.models import Ticket, Review
+from reviews.models import Ticket, Review, UserFollows
 
 class TicketForm(forms.ModelForm):
     
@@ -85,3 +85,19 @@ class ReviewForm(forms.ModelForm):
             "placeholder": "Corps de la critique",
         })
         
+
+from django import forms
+
+
+class FollowForm(forms.Form):
+    # L'utilisateur va taper le username exact de la personne à suivre
+    username = forms.CharField(
+        label="Nom d'utilisateur",
+        max_length=150,  # cohérent avec AbstractUser (username max_length=150)
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control",
+                "placeholder": "Nom d'utilisateur à suivre",
+            }
+        ),
+    )

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+            <h1 class="h4 mb-4">Suivre d'autres utilisateurs</h1>
+
+            {% if error %}
+                <div class="alert alert-danger py-2">
+                    {{ error }}
+                </div>
+            {% endif %}
+
+            <form method="post" class="card p-3 shadow-sm mb-4">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    {{ form.username.label_tag }}
+                    {{ form.username }}
+                    <div class="text-danger small">
+                        {{ form.username.errors }}
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary">
+                        Suivre
+                    </button>
+                </div>
+            </form>
+
+            <h2 class="h5 mb-3">Utilisateurs suivis</h2>
+
+            {% if following_relations %}
+                <ul class="list-group">
+                    {% for rel in following_relations %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ rel.followed_user.username }}
+                            <form method="post" action="{% url 'unfollow' rel.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                  Se désabonner
+                                </button>
+                            </form>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>Vous ne suivez encore personne.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
