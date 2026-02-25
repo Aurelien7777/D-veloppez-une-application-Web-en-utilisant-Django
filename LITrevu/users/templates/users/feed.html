@@ -1,19 +1,36 @@
-{% extends 'base.html' %}
-
+{% extends "base.html" %}
 {% block content %}
 
-    <h1>BIENVENUE SUR VOTRE ESPACE</h1>
+<div class="container py-4">
 
-    <h2>Tickets</h2>
-    {% for photo in photos%}
-        <img src="{{ photo.image.url}}" alt="">
-        <p></p>
-    {% endfor %}
+  <!-- Bandeau actions (comme le wireframe) -->
+  <div class="d-flex justify-content-center gap-4 mb-4">
 
-    <form action="" method="post">
-        {% csrf_token %}
-        {{form.as_p}}
-    </form>
+    <!-- Bouton : Demander une critique = créer un ticket -->
+    <a href="{% url 'ticket_view' %}" class="btn btn-outline-dark">
+      Demander une critique
+    </a>
 
+    <!-- Bouton : Créer une critique = ticket + review en 1 étape -->
+    <a href="{% url 'review_ticket_view' %}" class="btn btn-outline-dark">
+      Créer une critique
+    </a>
+
+  </div>
+
+  <!-- Liste des posts (tickets + reviews) -->
+  {% for post in posts %}
+
+    {% if post.content_type == "TICKET" %}
+      {% include "snippets/ticket_snippet.html" %}
+    {% elif post.content_type == "REVIEW" %}
+      {% include "snippets/review_snippet.html" %}
+    {% endif %}
+
+  {% empty %}
+    <p>Aucun contenu dans votre flux.</p>
+  {% endfor %}
+
+</div>
 
 {% endblock %}

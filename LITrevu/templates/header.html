@@ -1,13 +1,63 @@
+<!-- header.html -->
 
-<header>
-    <nav>
+<!--
+  Barre de navigation avec une bordure basse comme sur le wireframe.
+  (Bootstrap) border-bottom = trait fin sous la barre
+-->
+<nav class="border-bottom">
+
+    <!--
+      (Bootstrap) container :
+      - centre le contenu
+      - impose une largeur max responsive
+      py-3 = padding vertical pour donner de la hauteur à la barre
+      position-relative = nécessaire pour pouvoir centrer un élément en absolute à l'intérieur
+    -->
+    <div class="container py-3 position-relative">
+  
+      <!--
+        Bloc de titre centré :
+        - position-absolute : sort du flux normal
+        - top-50 : place le haut du bloc à 50% de la hauteur
+        - start-50 : place la gauche du bloc à 50% de la largeur
+        - translate-middle : recentre parfaitement en X et Y
+        Résultat : "LITReview" est strictement au centre, même si un menu est à droite.
+      -->
+      <div class="position-absolute top-50 start-50 translate-middle">
+  
         {% if user.is_authenticated %}
-            <a href="{% url 'feed' %}">Accueil</a>
-            <span>Bonjour {{ user.username }}</span>
-            <a href="{% url 'logout' %}">Se déconnecter</a>
+          <!--
+            Lien "titre" (sans soulignement, couleur sombre, plus gras)
+            fw-semibold = semi-gras
+          -->
+          <a href="{% url 'feed' %}" class="text-decoration-none text-dark fw-semibold">
+            LITReview
+          </a>
         {% else %}
-            <a href="{% url 'login' %}">Se connecter</a>
-            <a href="{% url 'signup' %}">S'inscrire</a>
+          <a href="{% url 'login' %}" class="text-decoration-none text-dark fw-semibold">
+            LITReview
+          </a>
         {% endif %}
-    </nav>
-</header>
+  
+      </div>
+  
+      {% if user.is_authenticated %}
+        <!--
+          Menu à droite :
+          - d-flex : active flexbox
+          - justify-content-end : pousse le bloc à droite
+          - gap-4 : espace constant entre les liens
+        -->
+        <div class="d-flex justify-content-end gap-4">
+  
+          <!-- Liens du menu (style simple : pas de soulignement, texte sombre) -->
+          <a href="{% url 'feed' %}" class="text-decoration-none text-dark">Flux</a>
+          <a href="{% url 'ticket_view' %}" class="text-decoration-none text-dark">Posts</a>
+          <a href="{% url 'follows' %}" class="text-decoration-none text-dark">Abonnements</a>
+          <a href="{% url 'logout' %}" class="text-decoration-none text-dark">Se déconnecter</a>
+  
+        </div>
+      {% endif %}
+  
+    </div>
+  </nav>

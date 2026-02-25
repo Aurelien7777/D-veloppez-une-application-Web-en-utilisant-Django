@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container py-5">
+
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-10 col-lg-8">
+
+      <!-- Titre principal de la page -->
+      <h1 class="h4 mb-4">Créer une critique</h1>
+
+      <!-- Bloc affichant le ticket auquel on répond -->
+      <div class="card p-3 shadow-sm mb-4">
+
+        <!-- Informations sur l'auteur du ticket -->
+        <p class="mb-1">
+          <strong>Ticket de {{ ticket.user.username }}</strong>
+        </p>
+
+        <!-- Titre du ticket -->
+        <p class="mb-1">
+          <strong>{{ ticket.title }}</strong>
+        </p>
+
+        <!-- Description du ticket -->
+        <p class="mb-2">{{ ticket.description }}</p>
+
+        <!-- Image du ticket si elle existe -->
+        {% if ticket.image %}
+          <img
+            src="{{ ticket.image.url }}"
+            alt="Image associée au ticket"
+            class="img-fluid"
+          >
+        {% endif %}
+
+      </div>
+
+      <!-- Formulaire de création de critique -->
+      <form method="post" class="card p-4 shadow-sm">
+        {% csrf_token %}
+
+        <!-- Champ : headline -->
+        <div class="mb-3">
+          {{ form.headline.label_tag }}
+          {{ form.headline }}
+          <div class="text-danger small">{{ form.headline.errors }}</div>
+        </div>
+
+        <!-- Champ : rating -->
+        <div class="mb-3">
+          {{ form.rating.label_tag }}
+
+          <!-- Affichage en radios -->
+          <div class="d-flex flex-row flex-wrap align-items-center gap-1">
+            {% for radio in form.rating %}
+              <div class="form-check form-check-inline d-flex align-items-center gap-2">
+                {{ radio.tag }}
+                <label class="form-check-label" for="{{ radio.id_for_label }}">
+                  {{ radio.choice_label }}
+                </label>
+              </div>
+            {% endfor %}
+          </div>
+
+          <div class="text-danger small">{{ form.rating.errors }}</div>
+        </div>
+
+        <!-- Champ : body -->
+        <div class="mb-3">
+          {{ form.body.label_tag }}
+          {{ form.body }}
+          <div class="text-danger small">{{ form.body.errors }}</div>
+        </div>
+
+        <!-- Bouton envoyer -->
+        <div class="d-flex justify-content-end">
+          <button type="submit" class="btn btn-primary px-4">
+            Envoyer
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}

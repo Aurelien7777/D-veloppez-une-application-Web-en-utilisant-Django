@@ -1,0 +1,60 @@
+<!-- Bloc Review (style wireframe) -->
+<div class="card mb-4">
+    <div class="card-body">
+
+    {% if post.user == user %}
+        <div class="d-flex justify-content-end mb-2">
+            <a href="{% url 'review_edit' post.id %}" class="btn btn-sm btn-outline-secondary">
+            Modifier
+            </a>
+        </div>
+    {% endif %}
+  
+      <!-- Ligne info (gauche) + date (droite) -->
+      <div class="d-flex justify-content-between">
+        <p class="mb-2">
+          {% if post.user == user %}
+            <strong>Vous</strong> avez publié une critique
+          {% else %}
+            <strong>{{ post.user.username }}</strong> a posté une critique
+          {% endif %}
+        </p>
+  
+        <p class="text-muted small mb-2">
+          {{ post.time_created }}
+        </p>
+      </div>
+  
+      <!-- Headline + étoiles -->
+      <p class="mb-2">
+        <strong>{{ post.headline }}</strong>
+        -
+        {% for _ in "12345" %}
+          {% if forloop.counter <= post.rating %}
+            ★
+          {% else %}
+            ☆
+          {% endif %}
+        {% endfor %}
+      </p>
+  
+      <!-- Body -->
+      <p class="mb-3">{{ post.body }}</p>
+  
+      <!-- Encadré du ticket lié -->
+      <div class="border p-3">
+        <p class="mb-1"><strong>Ticket - {{ post.ticket.user.username }}</strong></p>
+        <p class="mb-1"><strong>{{ post.ticket.title }}</strong></p>
+        <p class="mb-2">{{ post.ticket.description }}</p>
+  
+        {% if post.ticket.image %}
+          <img
+            src="{{ post.ticket.image.url }}"
+            alt="Image associée au ticket"
+            class="img-fluid"
+          >
+        {% endif %}
+      </div>
+  
+    </div>
+  </div>

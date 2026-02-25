@@ -1,0 +1,51 @@
+<!-- Bloc Ticket (style wireframe) -->
+<div class="card mb-4">
+    <div class="card-body">
+  
+      <!-- Ligne info (gauche) + date (droite) -->
+      <div class="d-flex justify-content-between">
+        <p class="mb-2">
+          <strong>{{ post.user.username }}</strong> a demandé une critique
+        </p>
+        <p class="text-muted small mb-2">
+          {{ post.time_created }}
+        </p>
+      </div>
+  
+      <!-- Titre + description -->
+      <p class="mb-1"><strong>{{ post.title }}</strong></p>
+      <p class="mb-3">{{ post.description }}</p>
+  
+      <!-- Image ticket si présente -->
+      {% if post.image %}
+        <img
+          src="{{ post.image.url }}"
+          alt="Image associée au ticket"
+          class="img-fluid mb-3"
+        >
+      {% endif %}
+
+        {% if post.user == user %}
+    <div class="d-flex justify-content-end mb-2">
+        <a href="{% url 'ticket_edit' post.id %}" class="btn btn-sm btn-outline-secondary">
+        Modifier
+        </a>
+    </div>
+    {% endif %}
+  
+      <!-- Bouton : créer une critique (si pas déjà critiqué par l'utilisateur connecté) -->
+      {% if post.id not in reviewed_ticket_ids %}
+        <div class="d-flex justify-content-end">
+          <!--
+            Lien provisoire :
+            Tu n’as pas encore la vue "review en réponse à un ticket" (point 11 = non).
+            On remplacera ce lien dès qu’on crée l’URL.
+          -->
+          <a href="{% url 'review_response' post.id %}" class="btn btn-outline-dark btn-sm">
+            Créer une critique
+          </a>
+        </div>
+      {% endif %}
+  
+    </div>
+  </div>

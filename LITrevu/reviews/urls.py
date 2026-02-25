@@ -16,6 +16,17 @@ urlpatterns = [
     path("feed/", views.feed, name="feed"),
     path("<int:user_id>/block/", views.block_view, name="block"),
     path("<int:user_id>/unblock/", views.unblock_view, name="unblock"),
+    path("ticket/<int:ticket_id>/review/", views.create_review_response_view, name="review_response"),
+    # Modifier un ticket
+    path("ticket/<int:ticket_id>/edit/", views.update_ticket_view, name="ticket_edit"),
+    # Supprimer un ticket (POST uniquement)
+    path("ticket/<int:ticket_id>/delete/", views.delete_ticket_view, name="ticket_delete"),
+    # Modifier une critique
+    path("review/<int:review_id>/edit/", views.update_review_view, name="review_edit"),
+    # Supprimer une critique (POST uniquement)
+    path("review/<int:review_id>/delete/", views.delete_review_view, name="review_delete"),
+
+
     # "name =" permet de créer une variable réutilisable pour le path 
     # Exemple dans un gabarit HTML on va l'utiliser comme ceci:
     # <p><a href="{% url 'signup' %}">Créer un compte</a></p>
