@@ -1,4 +1,15 @@
+# Environnement virtuel
 env/
+venv/
+
+# Python
 __pycache__/
 *.pyc
 
+# Django
+*.log
+media/
+
+# IDE / OS
+.vscode/
+.DS_Store
