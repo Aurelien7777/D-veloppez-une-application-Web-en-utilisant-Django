@@ -20,7 +20,7 @@
       {% if post.image %}
         <img
           src="{{ post.image.url }}"
-          alt="Image associée au ticket"
+          alt="Image du ticket : {{ post.title }}"
           class="img-fluid mb-3"
         >
       {% endif %}
