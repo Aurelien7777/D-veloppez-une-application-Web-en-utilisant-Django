@@ -1,9 +1,31 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import TicketForm, ReviewForm, UserFollows, FollowForm
+from .forms import TicketForm, ReviewForm, FollowForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
+from .services import block_user, unblock_user, is_blocked
+from .models import Ticket, UserFollows, UserBlock
 
 User = get_user_model()
+
+
+@login_required
+def feed(request):
+    # 1) Liste des utilisateurs que JE bloque
+    blocked_ids = UserBlock.objects.filter(
+        blocker=request.user
+    ).values_list("blocked_id", flat=True)
+
+    # 2) Liste des utilisateurs qui ME bloquent
+    blockers_ids = UserBlock.objects.filter(
+        blocked=request.user
+    ).values_list("blocker_id", flat=True)
+
+    excluded_user_ids = list(blocked_ids) + list(blockers_ids)
+
+    # 3) Exclure les tickets issus de ces utilisateurs
+    tickets = Ticket.objects.exclude(user_id__in=excluded_user_ids)
+
+    return render(request, "users/feed.html", {"tickets": tickets})
 
 @login_required
 def create_ticket_and_review_view(request):
@@ -91,7 +113,12 @@ def follows_view(request):
     """
 
     # 1) Liste des abonnements actuels de l'utilisateur connecté
+    # Abonnements : qui je suis
     following_relations = UserFollows.objects.filter(user=request.user).select_related("followed_user")
+    
+    blocked_user_ids = set(
+    UserBlock.objects.filter(blocker=request.user).values_list("blocked_id", flat=True)
+    )
 
     # 2) Formulaire par défaut (vide)
     form = FollowForm()
@@ -109,32 +136,37 @@ def follows_view(request):
             if username_to_follow == request.user.username:
                 error = "Vous ne pouvez pas vous suivre vous-même."
             else:
-                # B) Vérifier que l'utilisateur existe
+                # B) Vérifier que l'utilisateur existe (ici seulement !)
                 try:
                     user_to_follow = User.objects.get(username=username_to_follow)
                 except User.DoesNotExist:
                     error = "Cet utilisateur n'existe pas."
                 else:
-                    # C) Vérifier si déjà suivi (sinon unique_together peut faire planter)
-                    already_following = UserFollows.objects.filter(
-                        user=request.user,
-                        followed_user=user_to_follow,
-                    ).exists()
-
-                    if already_following:
-                        error = "Vous suivez déjà cet utilisateur."
+                    # C) Vérifier le blocage AVANT toute création de follow
+                    if is_blocked(request.user, user_to_follow):
+                        error = "Impossible de suivre cet utilisateur (blocage actif)."
                     else:
-                        # D) Créer l'abonnement
-                        UserFollows.objects.create(
+                        # D) Vérifier si déjà suivi (sinon unique_together peut faire planter)
+                        already_following = UserFollows.objects.filter(
                             user=request.user,
                             followed_user=user_to_follow,
-                        )
-                        return redirect("follows")  # recharger la page
+                        ).exists()
+
+                        if already_following:
+                            error = "Vous suivez déjà cet utilisateur."
+                        else:
+                            # E) Créer l'abonnement
+                            UserFollows.objects.create(
+                                user=request.user,
+                                followed_user=user_to_follow,
+                            )
+                            return redirect("follows")
 
     context = {
         "form": form,
         "following_relations": following_relations,
         "error": error,
+        "blocked_user_ids": blocked_user_ids,  
     }
     return render(request, "reviews/follows.html", context)
 
@@ -163,4 +195,35 @@ def unfollow_user_view(request, pk):
 
     # 5) Retour vers la page des abonnements
     return redirect("follows")
-    
+
+
+@login_required
+def block_view(request, user_id):
+    """
+    Bloque un utilisateur.
+    On utilise POST pour éviter un blocage via simple clic GET.
+    """
+    if request.method != "POST":
+        return redirect("follows")  # remplace par la page logique chez toi
+
+    blocked = get_object_or_404(User, id=user_id)
+
+    # Sécurité: on empêche de se bloquer soi-même (double sécurité)
+    if blocked == request.user:
+        return redirect("follows")
+
+    block_user(blocker=request.user, blocked=blocked)
+    return redirect("follows")
+
+
+@login_required
+def unblock_view(request, user_id):
+    """
+    Débloque un utilisateur.
+    """
+    if request.method != "POST":
+        return redirect("follows")
+
+    blocked = get_object_or_404(User, id=user_id)
+    unblock_user(blocker=request.user, blocked=blocked)
+    return redirect("follows")

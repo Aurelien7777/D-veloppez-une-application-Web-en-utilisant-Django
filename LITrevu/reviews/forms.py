@@ -84,9 +84,6 @@ class ReviewForm(forms.ModelForm):
             "class": "form-control",
             "placeholder": "Corps de la critique",
         })
-        
-
-from django import forms
 
 
 class FollowForm(forms.Form):

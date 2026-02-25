@@ -9,7 +9,7 @@ urlpatterns = [
     path("signup/", views.signup, name="signup"),
     path("login/", views.login_view, name="login"),
     path("logout/", views.logout_view, name="logout"),
-    path("feed/", views.feed, name="feed"),
+    
     # "name =" permet de créer une variable réutilisable pour le path 
     # Exemple dans un gabarit HTML on va l'utiliser comme ceci:
     # <p><a href="{% url 'signup' %}">Créer un compte</a></p>

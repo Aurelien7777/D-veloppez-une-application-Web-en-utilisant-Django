@@ -10,13 +10,6 @@ from django.shortcuts import render, redirect
 
 from django.contrib.auth.decorators import login_required
 from .forms import LoginForm
-from reviews import models
-
-
-@login_required
-def feed(request):
-    tickets = models.Ticket.objects.all()
-    return render(request, "users/feed.html", {'tickets' : tickets})
 
 
 

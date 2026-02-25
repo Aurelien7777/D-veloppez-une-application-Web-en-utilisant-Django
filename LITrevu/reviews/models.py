@@ -126,3 +126,38 @@ class UserFollows(models.Model):
         # Exemple interdit :
         # user = Alice, followed_user = Bob (deux fois)
         unique_together = ("user", "followed_user")
+
+
+class UserBlock(models.Model):
+    """
+    Relation de blocage :
+    - blocker : l'utilisateur qui bloque
+    - blocked : l'utilisateur bloqué
+
+    Une même paire (blocker, blocked) ne peut exister qu'une seule fois.
+    """
+    blocker = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="blocks_made",
+    )
+    blocked = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="blocks_received",
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["blocker", "blocked"],
+                name="unique_user_block",
+            ),
+            models.CheckConstraint(
+                condition=~models.Q(blocker=models.F("blocked")),
+                name="prevent_self_block",
+            ),
+    ]
+    def __str__(self) -> str:
+        return f"{self.blocker} blocks {self.blocked}"

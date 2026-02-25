@@ -35,15 +35,40 @@
             {% if following_relations %}
                 <ul class="list-group">
                     {% for rel in following_relations %}
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            {{ rel.followed_user.username }}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+
+                        <span>{{ rel.followed_user.username }}</span>
+                    
+                        <div class="d-flex gap-2">
+                    
+                            {# Bouton désabonnement #}
                             <form method="post" action="{% url 'unfollow' rel.id %}">
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-sm btn-outline-danger">
-                                  Se désabonner
+                                    Se désabonner
                                 </button>
                             </form>
-                        </li>
+                    
+                            {# Bouton blocage / déblocage #}
+                            {% if rel.followed_user.id in blocked_user_ids %}
+                                <form method="post" action="{% url 'unblock' rel.followed_user.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-sm btn-outline-secondary">
+                                        Débloquer
+                                    </button>
+                                </form>
+                            {% else %}
+                                <form method="post" action="{% url 'block' rel.followed_user.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-sm btn-outline-dark">
+                                        Bloquer
+                                    </button>
+                                </form>
+                            {% endif %}
+                    
+                        </div>
+                    
+                    </li>
                     {% endfor %}
                 </ul>
             {% else %}
