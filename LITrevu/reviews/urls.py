@@ -9,7 +9,6 @@ from . import views
 # correspondant ou rattachée au path ou bout de chemin entré
 urlpatterns = [
     path("ticket/", views.create_ticket_view, name="ticket_view"),
-    path("review/", views.create_review_view, name="review_view"),
     path(
         "review_ticket/", views.create_ticket_and_review_view, name="review_ticket_view"
     ),

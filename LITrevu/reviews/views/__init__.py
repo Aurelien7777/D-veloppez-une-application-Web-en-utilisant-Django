@@ -22,7 +22,6 @@ from .tickets import (
 
 # REVIEWS
 from .reviews import (
-    create_review_view,
     create_review_response_view,
     update_review_view,
     delete_review_view,
