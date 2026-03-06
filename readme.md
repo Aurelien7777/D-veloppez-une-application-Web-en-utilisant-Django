@@ -163,6 +163,7 @@ DEBUG=True
 ## 5. Appliquer les migrations
 
 ```
+cd LITrevu
 python manage.py migrate
 ```
 
