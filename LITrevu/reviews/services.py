@@ -9,8 +9,10 @@ def is_blocked(user_a, user_b) -> bool:
     Retourne True si user_a bloque user_b OU user_b bloque user_a.
     (Blocage "mutuel" dans le sens des effets, pas dans la base.)
     """
-    return UserBlock.objects.filter(blocker=user_a, blocked=user_b).exists() or \
-           UserBlock.objects.filter(blocker=user_b, blocked=user_a).exists()
+    return (
+        UserBlock.objects.filter(blocker=user_a, blocked=user_b).exists()
+        or UserBlock.objects.filter(blocker=user_b, blocked=user_a).exists()
+    )
 
 
 @transaction.atomic

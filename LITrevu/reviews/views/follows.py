@@ -32,13 +32,15 @@ def follows_view(request):
     """
 
     # Liste des relations "je suis abonné à ..."
-    following_relations = UserFollows.objects.filter(
-        user=request.user
-    ).select_related("followed_user")
+    following_relations = UserFollows.objects.filter(user=request.user).select_related(
+        "followed_user"
+    )
 
     # Liste des IDs des utilisateurs que je bloque (utile au template)
     blocked_user_ids = set(
-        UserBlock.objects.filter(blocker=request.user).values_list("blocked_id", flat=True)
+        UserBlock.objects.filter(blocker=request.user).values_list(
+            "blocked_id", flat=True
+        )
     )
 
     form = FollowForm()
@@ -104,10 +106,13 @@ def unfollow_user_view(request, pk):
 
     follow_relation = get_object_or_404(UserFollows, pk=pk)
 
+    # autorisation : seul le créateur de la relation peut supprime
     if follow_relation.user != request.user:
         return redirect("follows")
 
+    # suppression dans la base de donnée
     follow_relation.delete()
+
     return redirect("follows")
 
 

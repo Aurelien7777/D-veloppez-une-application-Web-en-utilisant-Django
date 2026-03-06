@@ -33,10 +33,7 @@ class Ticket(models.Model):
     # ForeignKey = relation entre deux tables
     # Ici : chaque ticket appartient à UN utilisateur
     # settings.AUTH_USER_MODEL = ton User personnalisé
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE
-    )
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     # Image facultative (ex : couverture du livre)
     # null=True = autorisé en base de données
@@ -61,10 +58,7 @@ class Review(models.Model):
 
     # Ticket auquel la critique est rattachée
     # Une critique est TOUJOURS liée à un ticket
-    ticket = models.ForeignKey(
-        to=Ticket,
-        on_delete=models.CASCADE
-    )
+    ticket = models.ForeignKey(to=Ticket, on_delete=models.CASCADE)
 
     # Note donnée par l'utilisateur
     # PositiveSmallIntegerField = entier positif (0, 1, 2, ...)
@@ -72,7 +66,7 @@ class Review(models.Model):
     rating = models.PositiveSmallIntegerField(
         validators=[
             MinValueValidator(0),  # minimum autorisé
-            MaxValueValidator(5)   # maximum autorisé
+            MaxValueValidator(5),  # maximum autorisé
         ]
     )
 
@@ -84,10 +78,7 @@ class Review(models.Model):
     body = models.TextField(max_length=8192, blank=True)
 
     # Utilisateur qui a écrit la critique
-    user = models.ForeignKey(
-        to=settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE
-    )
+    user = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     # Date et heure de création de la critique
     time_created = models.DateTimeField(auto_now_add=True)
@@ -104,16 +95,14 @@ class UserFollows(models.Model):
 
     # L'utilisateur qui suit quelqu'un
     user = models.ForeignKey(
-        to=settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name="following"
+        to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="following"
     )
 
     # L'utilisateur qui est suivi
     followed_user = models.ForeignKey(
         to=settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name="followed_by"
+        related_name="followed_by",
     )
 
     class Meta:
@@ -136,11 +125,15 @@ class UserBlock(models.Model):
 
     Une même paire (blocker, blocked) ne peut exister qu'une seule fois.
     """
+
+    # Celui qui bloque
     blocker = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="blocks_made",
     )
+
+    # Celui qui est bloqué
     blocked = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -158,6 +151,7 @@ class UserBlock(models.Model):
                 condition=~models.Q(blocker=models.F("blocked")),
                 name="prevent_self_block",
             ),
-    ]
+        ]
+
     def __str__(self) -> str:
         return f"{self.blocker} blocks {self.blocked}"

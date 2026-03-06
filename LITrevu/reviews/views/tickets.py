@@ -5,7 +5,7 @@ Ce fichier regroupe :
 - création de ticket
 - modification de ticket
 - suppression de ticket
-- création "ticket + review" en une seule étape (fonctionnalité OC)
+- création "ticket + review" en une seule étape
 """
 
 from django.contrib.auth.decorators import login_required

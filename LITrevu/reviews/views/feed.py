@@ -9,7 +9,11 @@ Ce fichier contient uniquement la logique du feed :
 
 from itertools import chain  # combine plusieurs itérables (QuerySets)
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q, Value, CharField  # Q pour OR, Value/CharField pour annotate
+from django.db.models import (
+    Q,
+    Value,
+    CharField,
+)  # Q pour OR, Value/CharField pour annotate
 from django.shortcuts import render
 
 from ..models import Ticket, Review, UserFollows, UserBlock
@@ -32,19 +36,19 @@ def feed(request):
     # 1) Récupérer les utilisateurs suivis (IDs)
     # ---------------------------------------------------
     followed_users = UserFollows.objects.filter(
-        user=request.user
+        user=request.user  # Correspond à l'utilisateur connecté
     ).values_list("followed_user", flat=True)
 
     # ---------------------------------------------------
     # 2) Gestion du blocage (IDs à exclure)
     # ---------------------------------------------------
-    blocked_ids = UserBlock.objects.filter(
-        blocker=request.user
-    ).values_list("blocked_id", flat=True)
+    blocked_ids = UserBlock.objects.filter(blocker=request.user).values_list(
+        "blocked_id", flat=True
+    )
 
-    blockers_ids = UserBlock.objects.filter(
-        blocked=request.user
-    ).values_list("blocker_id", flat=True)
+    blockers_ids = UserBlock.objects.filter(blocked=request.user).values_list(
+        "blocker_id", flat=True
+    )
 
     # On transforme en liste simple pour l'utiliser dans exclude()
     excluded_user_ids = list(blocked_ids) + list(blockers_ids)
@@ -54,20 +58,16 @@ def feed(request):
     # ---------------------------------------------------
     tickets = Ticket.objects.filter(
         Q(user__in=followed_users) | Q(user=request.user)
-    ).exclude(
-        user__in=excluded_user_ids
-    )
+    ).exclude(user__in=excluded_user_ids)
 
     # ---------------------------------------------------
     # 4) Reviews visibles
     # ---------------------------------------------------
     reviews = Review.objects.filter(
-        Q(user__in=followed_users) |
-        Q(user=request.user) |
-        Q(ticket__user=request.user)  # reviews faites sur MES tickets
-    ).exclude(
-        user__in=excluded_user_ids
-    )
+        Q(user__in=followed_users)  # Reviews écrites par les utilisateurs que tu suis.
+        | Q(user=request.user)  # Mes propres reviews.
+        | Q(ticket__user=request.user)  # reviews faites sur MES tickets
+    ).exclude(user__in=excluded_user_ids)
 
     # ---------------------------------------------------
     # 5) Annoter pour distinguer Ticket / Review dans le template
@@ -79,9 +79,7 @@ def feed(request):
     # 6) Fusion + tri antéchronologique
     # ---------------------------------------------------
     posts = sorted(
-        chain(tickets, reviews),
-        key=lambda post: post.time_created,
-        reverse=True
+        chain(tickets, reviews), key=lambda post: post.time_created, reverse=True
     )
 
     # ---------------------------------------------------
@@ -90,6 +88,10 @@ def feed(request):
     reviewed_ticket_ids = set(
         Review.objects.filter(user=request.user).values_list("ticket_id", flat=True)
     )
+
+    # Review.objects.filter(user=request.user) = MES reviews (celles que j'ai écrites).
+    # .values_list("ticket_id", flat=True) =
+    # pour chacune de MES reviews, on récupère l’ID du ticket associé.
 
     # Rendu du template (ton feed est dans users/feed.html)
     return render(

@@ -21,7 +21,7 @@ def create_review_view(request):
     Crée une critique "simple".
 
     Attention :
-    - Dans ton projet, la critique est normalement liée à un Ticket.
+    - La critique est normalement liée à un Ticket.
     - Cette vue sert si tu as une page "Créer une critique" indépendante.
     - Si ton formulaire ReviewForm n'inclut pas le champ ticket,
       cette vue ne pourra pas fonctionner (car Review.ticket est obligatoire).

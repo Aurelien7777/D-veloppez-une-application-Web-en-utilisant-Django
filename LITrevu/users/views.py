@@ -1,16 +1,15 @@
 # On utilise les outils d'authentification fournis par Django
 from django.contrib.auth import login, logout, authenticate
 
-# On utilise le formulaire de création d'utilisateur par défaut (basé sur ton User custom)
-from django.contrib.auth.forms import UserCreationForm
+# On utilise le formulaire de création d'utilisateur
+# par défaut (basé sur ton User custom)
 from .forms import CustomUserCreationForm
 
-# Outils Django classiques : render = afficher un template, redirect = rediriger vers une page
+# Outils Django classiques:
+# render = afficher un template, redirect = rediriger vers une page
 from django.shortcuts import render, redirect
 
-from django.contrib.auth.decorators import login_required
 from .forms import LoginForm
-
 
 
 def signup(request):
@@ -19,12 +18,12 @@ def signup(request):
     - Si on arrive en GET : on affiche le formulaire vide
     - Si on arrive en POST : on valide et on crée l'utilisateur
     """
-    
+
     if request.user.is_authenticated:
         return redirect("feed")
 
     if request.method == "POST":
-        # Création d'une instance UserCreationForm 
+        # Création d'une instance UserCreationForm
         # On remplit le formulaire avec ce que l'utilisateur a tapé
         # Créer une instance de notre formulaire et le remplir avec les données POST
         form = CustomUserCreationForm(request.POST)
@@ -63,12 +62,17 @@ def login_view(request):
                 login(request, user)
                 return redirect("feed")
 
-            return render(request, "users/login.html", {"form": form, "error": "Identifiants invalides."})
+            return render(
+                request,
+                "users/login.html",
+                {"form": form, "error": "Identifiants invalides."},
+            )
 
     else:
         form = LoginForm()
 
     return render(request, "users/login.html", {"form": form})
+
 
 def logout_view(request):
     """
