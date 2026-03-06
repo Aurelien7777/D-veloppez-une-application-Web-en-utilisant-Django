@@ -117,7 +117,7 @@ django-web-app/
 ## 1. Cloner le projet
 
 ```bash
-git clone <https://github.com/Aurelien7777/D-veloppez-une-application-Web-en-utilisant-Django.git>
+git clone https://github.com/Aurelien7777/D-veloppez-une-application-Web-en-utilisant-Django.git
 cd django-web-app
 ```
 
@@ -151,18 +151,7 @@ pip install -r requirements.txt
 
 ---
 
-## 4. Configurer les variables d'environnement
-
-Créer un fichier `.env` à la racine du projet :
-
-```
-SECRET_KEY=your_secret_key
-DEBUG=True
-```
-
----
-
-## 5. Appliquer les migrations
+## 4. Appliquer les migrations
 
 ```
 cd LITrevu
@@ -171,7 +160,7 @@ python manage.py migrate
 
 ---
 
-## 6. Lancer le serveur
+## 5. Lancer le serveur
 
 ```
 python manage.py runserver
