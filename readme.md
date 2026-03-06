@@ -228,15 +228,6 @@ Configuration présente dans :
 
 ---
 
-# Améliorations possibles
-
-- pagination du flux
-- système de notifications
-- amélioration de l'interface utilisateur
-- déploiement (Heroku / Render)
-
----
-
 # Auteur
 
 Projet réalisé par **Aurélien Amorin**  

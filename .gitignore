@@ -9,7 +9,6 @@ __pycache__/
 # Django
 *.log
 media/
-.env
 
 # IDE / OS
 .vscode/
