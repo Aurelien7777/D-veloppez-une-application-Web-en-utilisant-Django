@@ -2,196 +2,239 @@
 
 Application web développée avec **Django** permettant aux utilisateurs de :
 
-- Créer des **tickets** (demande de critique)
-- Publier des **critiques** (reviews)
-- **Suivre** d'autres utilisateurs
-- **Bloquer** des utilisateurs
-- Consulter un **flux personnalisé** combinant tickets et critiques
+- créer des **tickets** (demande de critique)
+- publier des **critiques** (reviews)
+- **suivre** d'autres utilisateurs
+- **bloquer** des utilisateurs
+- consulter un **flux personnalisé** combinant tickets et critiques
 
-Projet réalisé dans le cadre du parcours **Développeur d'application Python – OpenClassrooms**.
+Projet réalisé dans le cadre du parcours  
+**Développeur d'application Python – OpenClassrooms**
 
 ---
 
-# ⚙️ Technologies utilisées
+# Fonctionnalités principales
+
+## Gestion des utilisateurs
+
+- inscription
+- connexion / déconnexion
+- suivi d'autres utilisateurs
+- blocage d'utilisateurs
+
+## Tickets
+
+Un ticket correspond à une **demande de critique** d’un livre ou d’un article.
+
+Un utilisateur peut :
+
+- créer un ticket
+- modifier son ticket
+- supprimer son ticket
+
+## Critiques
+
+Un utilisateur peut :
+
+- publier une critique
+- répondre à un ticket avec une critique
+- modifier sa critique
+- supprimer sa critique
+
+## Flux personnalisé
+
+Le flux affiche :
+
+- les tickets de l’utilisateur connecté
+- les tickets des utilisateurs suivis
+- les critiques des utilisateurs suivis
+- les critiques faites sur les tickets de l’utilisateur
+
+Les publications sont triées par **date antéchronologique**.
+
+---
+
+# Technologies utilisées
 
 - Python 3.12
 - Django 6.0.1
 - SQLite3
 - Bootstrap 5
-- Pillow (gestion des images)
+- Pillow
 
 ---
 
-# 🚀 Installation
+# Structure du projet
 
-## 1️⃣ Cloner le projet
+```
+django-web-app/
+│
+├── env/
+├── .env
+├── .flake8
+├── .gitignore
+├── requirements.txt
+│
+└── LITrevu/
+│
+├── manage.py
+├── db.sqlite3
+│
+├── LITrevu/
+│ ├── settings.py
+│ ├── urls.py
+│ └── asgi.py / wsgi.py
+│
+├── users/
+│ ├── models.py
+│ ├── forms.py
+│ ├── views.py
+│ ├── urls.py
+│ └── templates/
+│
+├── reviews/
+│ ├── models.py
+│ ├── forms.py
+│ ├── services.py
+│ ├── urls.py
+│ ├── views/
+│ │ ├── feed.py
+│ │ ├── tickets.py
+│ │ ├── reviews.py
+│ │ └── follows.py
+│ └── templates/
+│
+├── templates/
+└── media/
+```
+
+---
+
+# Installation
+
+## 1. Cloner le projet
 
 ```bash
-git clone <url-du-repo>
+git clone <url-du-repository>
 cd django-web-app
-2️⃣ Créer et activer un environnement virtuel
+```
+
+---
+
+## 2. Créer un environnement virtuel
+
+```bash
 python -m venv env
-Windows
+```
+
+### Windows
+
+```
 env\Scripts\activate
-Mac / Linux
+```
+
+### Mac / Linux
+
+```
 source env/bin/activate
-3️⃣ Installer les dépendances
+```
+
+---
+
+## 3. Installer les dépendances
+
+```
 pip install -r requirements.txt
-4️⃣ Lancer le serveur
-cd LITrevu
+```
+
+---
+
+## 4. Configurer les variables d'environnement
+
+Créer un fichier `.env` à la racine du projet :
+
+```
+SECRET_KEY=your_secret_key
+DEBUG=True
+```
+
+---
+
+## 5. Appliquer les migrations
+
+```
+python manage.py migrate
+```
+
+---
+
+## 6. Lancer le serveur
+
+```
 python manage.py runserver
+```
 
-Accéder à l'application :
+Accéder ensuite à :
 
+```
 http://127.0.0.1:8000/
-👤 Comptes de test
+```
 
-(À adapter selon tes comptes)
+---
 
-Utilisateur standard
-Username : testuser
-Mot de passe : password123
-Administrateur
-Username : admin1
-Mot de passe : admin
+# Comptes de test
 
-Accès interface admin :
+Superuser :
 
-http://127.0.0.1:8000/admin/
-📌 Fonctionnalités principales
-🔹 Gestion des tickets
+```
+username : admin1
+password : admin
+```
 
-Création d’un ticket avec titre, description et image optionnelle
+Utilisateur standard :
 
-Modification et suppression uniquement par l’auteur
+```
+username : user2
+password : passpassyes
+```
 
-Suppression autorisée uniquement via requête POST
+---
 
-🔹 Gestion des critiques
+# Qualité du code
 
-Création d’une critique en réponse à un ticket
+Le projet utilise :
 
-Impossible de poster plus d’une critique sur le même ticket
+- **Flake8** pour l'analyse statique du code
+- **Black** pour le formatage automatique
 
-Modification et suppression réservées à l’auteur
+Configuration présente dans :
 
-🔹 Système d’abonnement
+```
+.flake8
+```
 
-Suivre un utilisateur par nom d’utilisateur
+---
 
-Désabonnement possible
+# Sécurité
 
-Gestion des erreurs :
+- les utilisateurs ne peuvent modifier **que leurs propres tickets**
+- les utilisateurs ne peuvent modifier **que leurs propres critiques**
+- les suppressions sont autorisées **uniquement via POST**
+- système de **blocage d'utilisateurs**
+- suppression automatique des relations de suivi lors d'un blocage
 
-utilisateur inexistant
+---
 
-utilisateur déjà suivi
+# Améliorations possibles
 
-auto-follow interdit
+- pagination du flux
+- système de notifications
+- amélioration de l'interface utilisateur
+- déploiement (Heroku / Render)
 
-🔹 Système de blocage
+---
 
-Possibilité de bloquer un utilisateur.
+# Auteur
 
-Un utilisateur bloqué :
-
-ne peut pas être suivi
-
-n’apparaît plus dans le flux
-
-son contenu est masqué dans les deux sens
-
-🔹 Flux personnalisé
-
-Le flux combine :
-
-les tickets des utilisateurs suivis
-
-les critiques des utilisateurs suivis
-
-les critiques publiées sur les tickets de l’utilisateur connecté
-
-les propres publications de l’utilisateur
-
-Les contenus sont :
-
-fusionnés
-
-annotés pour distinguer Ticket / Review
-
-triés par date antéchronologique
-
-🏗️ Architecture du projet
-
-Le projet est organisé en deux applications Django :
-
-📂 users
-
-Authentification
-
-Templates liés à la connexion
-
-Page feed
-
-📂 reviews
-
-Contient :
-
-modèles Ticket
-
-modèles Review
-
-modèles UserFollows
-
-modèles UserBlock
-
-Gestion de la logique métier.
-
-Les vues sont organisées par domaine :
-
-feed
-
-tickets
-
-reviews
-
-follows
-
-Les vues ont été refactorisées en package pour améliorer la lisibilité et la maintenabilité.
-
-🔐 Sécurité et bonnes pratiques
-
-Accès aux vues protégé via @login_required
-
-Vérification de l’auteur avant modification ou suppression
-
-Suppression possible uniquement via requête POST
-
-Validation des formulaires côté serveur
-
-Utilisation de get_object_or_404
-
-Gestion du blocage via service dédié
-
-📁 Base de données
-
-Le fichier db.sqlite3 est fourni avec des données de test afin de faciliter l’évaluation du projet.
-
-🧠 Points techniques intéressants
-
-Utilisation de Q() pour des requêtes complexes
-
-Fusion de QuerySets avec itertools.chain
-
-Annotation dynamique pour distinguer les types de contenu
-
-Séparation des responsabilités via refactorisation des vues
-
-Gestion du blocage bidirectionnel
-
-📌 Auteur
-
-Aurélien Amorin
-
-Projet réalisé dans le cadre du parcours
-Développeur d'application Python – OpenClassrooms
+Projet réalisé par **Aurélien Amorin**  
+dans le cadre du parcours **OpenClassrooms – Développeur d'application Python**
