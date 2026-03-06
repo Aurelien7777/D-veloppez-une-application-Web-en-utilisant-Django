@@ -61,6 +61,8 @@ Les publications sont triées par **date antéchronologique**.
 - SQLite3
 - Bootstrap 5
 - Pillow
+- flake8
+- black
 
 ---
 
@@ -76,36 +78,36 @@ django-web-app/
 ├── requirements.txt
 │
 └── LITrevu/
-│
-├── manage.py
-├── db.sqlite3
-│
-├── LITrevu/
-│ ├── settings.py
-│ ├── urls.py
-│ └── asgi.py / wsgi.py
-│
-├── users/
-│ ├── models.py
-│ ├── forms.py
-│ ├── views.py
-│ ├── urls.py
-│ └── templates/
-│
-├── reviews/
-│ ├── models.py
-│ ├── forms.py
-│ ├── services.py
-│ ├── urls.py
-│ ├── views/
-│ │ ├── feed.py
-│ │ ├── tickets.py
-│ │ ├── reviews.py
-│ │ └── follows.py
-│ └── templates/
-│
-├── templates/
-└── media/
+    │
+    ├── manage.py
+    ├── db.sqlite3
+    │
+    ├── LITrevu/
+    │ ├── settings.py
+    │ ├── urls.py
+    │ └── asgi.py / wsgi.py
+    │
+    ├── users/
+    │ ├── models.py
+    │ ├── forms.py
+    │ ├── views.py
+    │ ├── urls.py
+    │ └── templates/
+    │
+    ├── reviews/
+    │ ├── models.py
+    │ ├── forms.py
+    │ ├── services.py
+    │ ├── urls.py
+    │ ├── views/
+    │ │ ├── feed.py
+    │ │ ├── tickets.py
+    │ │ ├── reviews.py
+    │ │ └── follows.py
+    │ └── templates/
+    │
+    ├── templates/
+    └── media/
 ```
 
 ---
