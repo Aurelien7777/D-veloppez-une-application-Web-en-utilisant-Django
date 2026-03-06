@@ -117,7 +117,7 @@ django-web-app/
 ## 1. Cloner le projet
 
 ```bash
-git clone <url-du-repository>
+git clone <https://github.com/Aurelien7777/D-veloppez-une-application-Web-en-utilisant-Django.git>
 cd django-web-app
 ```
 
